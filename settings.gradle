@@ -1,1 +1,2 @@
 include ':app', ':zxingcore', ':lib'
+include ':zxingdemo'
