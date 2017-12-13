@@ -80,6 +80,7 @@ public final class CaptureActivityHandler extends Handler {
                 state = State.SUCCESS;
                 Bundle bundle = message.getData();
                 Bitmap barcode = null;
+
                 float scaleFactor = 1.0f;
                 if (bundle != null) {
                     byte[] compressedBitmap = bundle.getByteArray(DecodeThread.BARCODE_BITMAP);

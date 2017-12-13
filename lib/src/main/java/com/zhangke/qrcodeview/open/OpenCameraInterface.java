@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.camera.open;
+package com.zhangke.qrcodeview.open;
 
 import android.hardware.Camera;
 import android.util.Log;
