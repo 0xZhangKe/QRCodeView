@@ -77,5 +77,6 @@ public class DecodeThread extends Thread {
         if (rawResult != null && mQRCodeView != null) {
             mQRCodeView.getOnQRCodeListener().onQRCodeRecognition(rawResult);
         }
+        ByteArrayPool.getInstance().returnBuf(data);
     }
 }

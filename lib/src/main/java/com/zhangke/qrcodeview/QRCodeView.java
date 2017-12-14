@@ -30,7 +30,6 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
     private int mCameraID;
 
     private int dataSize = 0;
-    private ByteArrayPool byteArrayPool;
 
     private DecodeThread mDecodeThread;
     private OnQRCodeRecognitionListener onQRCodeListener;
@@ -55,7 +54,6 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
     private void init(){
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
-        byteArrayPool = new ByteArrayPool(3);
 
         mDecodeThread = new DecodeThread(this);
         mDecodeThread.start();
@@ -88,6 +86,7 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
             Point bestPreviewSize = CameraConfigurationUtils.findBestPreviewSizeValue(mCameraParameters, getContext());
             mCameraParameters.setPreviewSize(bestPreviewSize.x, bestPreviewSize.y);
             CameraUtil.setCameraPictureSize(mCameraParameters, mHeight);
+            CameraUtil.setCameraDisplayOrientation(getContext(), mCameraID, mCamera);
 
             mCameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//自动对焦
             mCameraParameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
@@ -115,7 +114,7 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         if (onQRCodeListener != null) {
-            byte[] buffer = new byte[dataSize];
+            byte[] buffer = ByteArrayPool.getInstance().getBuf(dataSize);
             System.arraycopy(data, 0, buffer, 0, buffer.length);
             Message message = Message.obtain(mDecodeThread.getHandler());
             message.what = DecodeThread.DECODE_EVENT;

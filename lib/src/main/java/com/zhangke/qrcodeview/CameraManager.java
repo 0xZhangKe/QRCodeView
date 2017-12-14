@@ -24,8 +24,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.zldlib.CameraView.open.OpenCamera;
-import com.zldlib.CameraView.open.OpenCameraInterface;
+
+import com.zhangke.qrcodeview.open.OpenCamera;
+import com.zhangke.qrcodeview.open.OpenCameraInterface;
 
 import java.io.IOException;
 

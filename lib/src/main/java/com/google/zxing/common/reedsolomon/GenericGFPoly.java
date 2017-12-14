@@ -25,7 +25,7 @@ package com.google.zxing.common.reedsolomon;
  *
  * @author Sean Owen
  */
-final class GenericGFPoly {
+public final class GenericGFPoly {
 
   private final GenericGF field;
   private final int[] coefficients;

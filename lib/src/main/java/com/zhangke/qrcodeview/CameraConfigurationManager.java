@@ -9,8 +9,8 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.zldlib.CameraView.open.CameraFacing;
-import com.zldlib.CameraView.open.OpenCamera;
+import com.zhangke.qrcodeview.open.CameraFacing;
+import com.zhangke.qrcodeview.open.OpenCamera;
 
 final class CameraConfigurationManager {
 
