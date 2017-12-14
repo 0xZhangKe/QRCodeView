@@ -1,2 +1,2 @@
-include ':app', ':zxingcore', ':lib'
+include ':app', ':lib'
 include ':zxingdemo'

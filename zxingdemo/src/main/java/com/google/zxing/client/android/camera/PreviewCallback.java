@@ -16,11 +16,18 @@
 
 package com.google.zxing.client.android.camera;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
 
 @SuppressWarnings("deprecation") // camera APIs
 final class PreviewCallback implements Camera.PreviewCallback {

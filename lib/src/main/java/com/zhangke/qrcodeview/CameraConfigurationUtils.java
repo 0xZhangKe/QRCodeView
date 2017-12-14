@@ -1,26 +1,13 @@
-/*
- * Copyright (C) 2014 ZXing authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zhangke.qrcodeview;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,12 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Utility methods for configuring the Android camera.
- *
- * @author Sean Owen
- */
-@SuppressWarnings("deprecation") // camera APIs
 public final class CameraConfigurationUtils {
 
     private static final String TAG = "CameraConfiguration";
@@ -268,6 +249,15 @@ public final class CameraConfigurationUtils {
         if (colorMode != null) {
             parameters.setColorEffect(colorMode);
         }
+    }
+
+    public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Context context){
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+
+        Point theScreenResolution = new Point();
+        display.getSize(theScreenResolution);
+        return findBestPreviewSizeValue(parameters, theScreenResolution);
     }
 
     public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Point screenResolution) {

@@ -78,7 +78,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="http" android:host="www.google.co.uk" android:path="/m/products/scan"/>
       </intent-filter>
-      <!-- Support zxing://scan/?... like iPhone app -->
+      <!-- Suppcom.google.zxingxing://scan/?... like iPhone app -->
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>

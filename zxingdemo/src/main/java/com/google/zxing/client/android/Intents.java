@@ -36,7 +36,7 @@ public final class Intents {
      * Send this intent to open the Barcodes app in scanning mode, find a barcode, and return
      * the results.
      */
-    public static final String ACTION = "com.google.zxing.client.android.SCAN";
+    public static final String ACTION = "com.google.com.google.zxing.client.android.SCAN";
 
     /**
      * By default, sending this will decode all barcodes that we understand. However it
@@ -198,7 +198,7 @@ public final class Intents {
      * Send this intent to encode a piece of data as a QR code and display it full screen, so
      * that another person can scan the barcode from your screen.
      */
-    public static final String ACTION = "com.google.zxing.client.android.ENCODE";
+    public static final String ACTION = "com.google.com.google.zxing.client.android.ENCODE";
 
     /**
      * The data to encode. Use {@link android.content.Intent#putExtra(String, String)} or
@@ -238,7 +238,7 @@ public final class Intents {
     /**
      * Use Google Book Search to search the contents of the book provided.
      */
-    public static final String ACTION = "com.google.zxing.client.android.SEARCH_BOOK_CONTENTS";
+    public static final String ACTION = "com.google.com.google.zxing.client.android.SEARCH_BOOK_CONTENTS";
 
     /**
      * The book to search, identified by ISBN number.
@@ -261,7 +261,7 @@ public final class Intents {
     /**
      * Internal intent used to trigger connection to a wi-fi network.
      */
-    public static final String ACTION = "com.google.zxing.client.android.WIFI_CONNECT";
+    public static final String ACTION = "com.google.com.google.zxing.client.android.WIFI_CONNECT";
 
     /**
      * The network to connect to, all the configuration provided here.
@@ -290,7 +290,7 @@ public final class Intents {
      * Give the user a choice of items to encode as a barcode, then render it as a QR Code and
      * display onscreen for a friend to scan with their phone.
      */
-    public static final String ACTION = "com.google.zxing.client.android.SHARE";
+    public static final String ACTION = "com.google.com.google.zxing.client.android.SHARE";
 
     private Share() {
     }

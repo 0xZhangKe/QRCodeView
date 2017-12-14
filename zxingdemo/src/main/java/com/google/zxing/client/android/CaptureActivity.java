@@ -85,7 +85,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private static final long DEFAULT_INTENT_RESULT_DURATION_MS = 1500L;
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
 
-    private static final String[] ZXING_URLS = {"http://zxing.appspot.com/scan", "zxing://scan/"};
+    private static final String[] ZXING_URLS = {"http://com.google.zxing.appspot.com/scan", "com.google.zxing://scan/"};
 
     private static final int HISTORY_REQUEST_CODE = 0x0000bacc;
 
@@ -681,7 +681,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 // TLD as the scan URL.
                 int end = sourceUrl.lastIndexOf("/scan");
                 String productReplyURL = sourceUrl.substring(0, end) + "?q=" +
-                        resultHandler.getDisplayContents() + "&source=zxing";
+                        resultHandler.getDisplayContents() + "&source=com.google.zxing";
                 sendReplyMessage(R.id.launch_product_query, productReplyURL, resultDurationMS);
                 break;
 

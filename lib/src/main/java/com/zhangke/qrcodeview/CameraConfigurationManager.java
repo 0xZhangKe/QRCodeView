@@ -1,22 +1,7 @@
-/*
- * Copyright (C) 2010 ZXing authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zhangke.qrcodeview;
 
 import android.content.Context;
+import android.graphics.ImageFormat;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.util.Log;
@@ -24,15 +9,9 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.zhangke.qrcodeview.open.CameraFacing;
-import com.zhangke.qrcodeview.open.OpenCamera;
+import com.zldlib.CameraView.open.CameraFacing;
+import com.zldlib.CameraView.open.OpenCamera;
 
-
-/**
- * A class which deals with reading, parsing, and setting the camera parameters which are used to
- * configure the camera hardware.
- */
-@SuppressWarnings("deprecation") // camera APIs
 final class CameraConfigurationManager {
 
     private static final String TAG = "CameraConfiguration";
@@ -52,7 +31,7 @@ final class CameraConfigurationManager {
     /**
      * Reads, one time, values from the camera that are needed by the app.
      */
-    void initFromCameraParameters(OpenCamera camera) {
+    public void initFromCameraParameters(OpenCamera camera) {
         Camera.Parameters parameters = camera.getCamera().getParameters();
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
@@ -122,7 +101,7 @@ final class CameraConfigurationManager {
         Log.i(TAG, "Preview size on screen: " + previewSizeOnScreen);
     }
 
-    void setDesiredCameraParameters(OpenCamera camera, boolean safeMode) {
+    public void setDesiredCameraParameters(OpenCamera camera, boolean safeMode) {
 
         Camera theCamera = camera.getCamera();
         Camera.Parameters parameters = theCamera.getParameters();
@@ -130,12 +109,6 @@ final class CameraConfigurationManager {
         if (parameters == null) {
             Log.w(TAG, "Device error: no camera parameters are available. Proceeding without configuration.");
             return;
-        }
-
-        Log.i(TAG, "Initial camera parameters: " + parameters.flatten());
-
-        if (safeMode) {
-            Log.w(TAG, "In camera config safe mode -- most settings will not be honored");
         }
 
         CameraConfigurationUtils.setFocus(
@@ -147,6 +120,7 @@ final class CameraConfigurationManager {
         CameraConfigurationUtils.setBarcodeSceneMode(parameters);
 
         parameters.setPreviewSize(bestPreviewSize.x, bestPreviewSize.y);
+        parameters.setPreviewFormat(ImageFormat.YV12);
 
         theCamera.setParameters(parameters);
 

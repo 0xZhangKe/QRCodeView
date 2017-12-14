@@ -1,17 +1,31 @@
 package com.zhangke.qrcodeview;
 
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
+
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.ReaderException;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
+
+import java.io.ByteArrayOutputStream;
 
 public class DecodeThread extends Thread {
+    private static final String TAG = "DecodeThread";
 
     public static final int DECODE_EVENT = 0x012;
     public static final int QUIT_EVENT = 0x013;
 
     private Handler mHandler;
-
-    private PreviewCameraView mPreviewCameraView;
+    private MultiFormatReader multiFormatReader = new MultiFormatReader();
+    private QRCodeView mQRCodeView;
 
     private class DecodeHandler extends Handler{
         @Override
@@ -19,19 +33,19 @@ public class DecodeThread extends Thread {
             super.handleMessage(msg);
             switch(msg.what){
                 case DECODE_EVENT:
-                    if(mPreviewCameraView != null && mPreviewCameraView.getOnPreviewCallback() != null && mPreviewCameraView.getHandler() !=  null){
-                        mPreviewCameraView.getOnPreviewCallback().onPreview((byte[])msg.obj, mPreviewCameraView.getHandler());
-                    }
+                    decode((byte[]) msg.obj, msg.arg1, msg.arg2);
                     break;
                 case QUIT_EVENT:
-                    Looper.myLooper().quit();
+                    if(Looper.myLooper() != null) {
+                        Looper.myLooper().quit();
+                    }
                     break;
             }
         }
     }
 
-    public DecodeThread(PreviewCameraView previewCameraView){
-        this.mPreviewCameraView = previewCameraView;
+    public DecodeThread(QRCodeView qrCodeView){
+        mQRCodeView = qrCodeView;
     }
 
     @Override
@@ -45,4 +59,23 @@ public class DecodeThread extends Thread {
         return mHandler;
     }
 
+    private void decode(byte[] data, int width, int height) {
+        if(data == null || data.length <= 0) return;
+        Result rawResult = null;
+        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+        if (source != null) {
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+            try {
+                rawResult = multiFormatReader.decodeWithState(bitmap);
+            } catch (ReaderException re) {
+                // continue
+            } finally {
+                multiFormatReader.reset();
+            }
+        }
+
+        if (rawResult != null && mQRCodeView != null) {
+            mQRCodeView.getOnQRCodeListener().onQRCodeRecognition(rawResult);
+        }
+    }
 }

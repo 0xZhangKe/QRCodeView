@@ -24,19 +24,11 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.zhangke.qrcodeview.open.OpenCamera;
-import com.zhangke.qrcodeview.open.OpenCameraInterface;
+import com.zldlib.CameraView.open.OpenCamera;
+import com.zldlib.CameraView.open.OpenCameraInterface;
 
 import java.io.IOException;
 
-/**
- * This object wraps the Camera service object and expects to be the only one talking to it. The
- * implementation encapsulates the steps needed to take preview-sized images, which are used for
- * both preview and decoding.
- *
- * @author dswitkin@google.com (Daniel Switkin)
- */
-@SuppressWarnings("deprecation") // camera APIs
 public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
@@ -48,10 +40,7 @@ public final class CameraManager {
 
     private final Context context;
     private final CameraConfigurationManager configManager;
-    /**
-     * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
-     * clear the handler so it will only receive one message.
-     */
+
     private final PreviewCallback previewCallback;
     private OpenCamera camera;
     private AutoFocusManager autoFocusManager;
@@ -290,4 +279,7 @@ public final class CameraManager {
         }
     }
 
+    public Point getBestPreviewSize(){
+        return configManager.getBestPreviewSize();
+    }
 }
