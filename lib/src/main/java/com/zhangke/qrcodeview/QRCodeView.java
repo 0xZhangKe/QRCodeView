@@ -6,8 +6,10 @@ import android.content.res.TypedArray;
 import android.graphics.ImageFormat;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -18,9 +20,11 @@ import com.zhangke.qrcodeview.lib.R;
  * Created by ZhangKe on 2017/12/11.
  */
 
-public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback{
+public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String TAG = "QRCodeView";
+    static final int EVENT_SUCCESS = 0x001;
+    static final int EVENT_FAILED = 0x002;
 
     private Camera mCamera;
     private Camera.Parameters mCameraParameters;
@@ -29,10 +33,34 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
     private int mWidth, mHeight;
     private int mCameraID;
 
-    private int dataSize = 0;
-
     private DecodeThread mDecodeThread;
     private OnQRCodeRecognitionListener onQRCodeListener;
+
+    private MainHandler mHandler = new MainHandler();
+    private PreviewCallback mPreviewCallback;
+
+    private boolean previewing = false;
+    private boolean surfaceCreated = false;
+
+    public class MainHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case EVENT_SUCCESS:
+                    if (mCamera != null) {
+                        onQRCodeListener.onQRCodeRecognition((Result)msg.obj);
+                        restartPreviewAndDecode();
+                    }
+                    break;
+                case EVENT_FAILED:
+                    if (mCamera != null) {
+                        restartPreviewAndDecode();
+                    }
+                    break;
+            }
+        }
+    }
 
     public QRCodeView(Context context) {
         super(context);
@@ -51,18 +79,19 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
         init();
     }
 
-    private void init(){
+    private void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
-
         mDecodeThread = new DecodeThread(this);
         mDecodeThread.start();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        surfaceCreated = true;
         openCamera();
-        mCamera.startPreview();
+        Log.e(TAG, "surfaceCreated");
+        startPreview();
     }
 
     @Override
@@ -72,11 +101,12 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        surfaceCreated = false;
         CameraUtil.releaseCamera(mCamera);
         Message.obtain(mDecodeThread.getHandler(), DecodeThread.QUIT_EVENT).sendToTarget();
     }
 
-    private void openCamera(){
+    private void openCamera() {
         try {
             mCamera = Camera.open(mCameraID);
             mCamera.setPreviewDisplay(this.getHolder());
@@ -92,6 +122,8 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
             mCameraParameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
 
             mCamera.setParameters(mCameraParameters);
+
+            mPreviewCallback = new PreviewCallback(bestPreviewSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,30 +134,39 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
             Camera.Size imageSize = this.mCamera.getParameters().getPreviewSize();
             this.mWidth = imageSize.width;
             this.mHeight = imageSize.height;
-            int lineBytes = imageSize.width * ImageFormat.getBitsPerPixel(mCameraParameters.getPreviewFormat()) / 8;
-            this.mCamera.addCallbackBuffer(new byte[lineBytes * this.mHeight]);
-            this.mCamera.addCallbackBuffer(new byte[lineBytes * this.mHeight]);
-            this.mCamera.addCallbackBuffer(new byte[lineBytes * this.mHeight]);
-            this.mCamera.setPreviewCallbackWithBuffer(this);
-            dataSize = lineBytes * this.mHeight;
         }
     }
 
-    @Override
-    public void onPreviewFrame(byte[] data, Camera camera) {
-        if (onQRCodeListener != null) {
-            byte[] buffer = ByteArrayPool.getInstance().getBuf(dataSize);
-            System.arraycopy(data, 0, buffer, 0, buffer.length);
-            Message message = Message.obtain(mDecodeThread.getHandler());
-            message.what = DecodeThread.DECODE_EVENT;
-            message.obj = buffer;
-            message.arg1 = mWidth;
-            message.arg2 = mHeight;
-            message.sendToTarget();
+    public void startPreview(){
+        if(!previewing && surfaceCreated) {
+            mCamera.startPreview();
+            restartPreviewAndDecode();
+            previewing = true;
         }
-        if (this.mCamera != null) {
-            this.mCamera.addCallbackBuffer(data);
+    }
+
+    public void stopPreview(){
+        if(previewing) {
+            mCamera.stopPreview();
+            previewing = false;
         }
+    }
+
+    public boolean isPreview(){
+        return previewing;
+    }
+
+    public Camera getCamera(){
+        return mCamera;
+    }
+
+    private void restartPreviewAndDecode() {
+        mPreviewCallback.setHandler(mDecodeThread.getHandler(), DecodeThread.DECODE_EVENT);
+        mCamera.setOneShotPreviewCallback(mPreviewCallback);
+    }
+
+    public Handler getHandler() {
+        return mHandler;
     }
 
     public OnQRCodeRecognitionListener getOnQRCodeListener() {
@@ -136,7 +177,7 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback, C
         this.onQRCodeListener = onQRCodeListener;
     }
 
-    public interface OnQRCodeRecognitionListener{
+    public interface OnQRCodeRecognitionListener {
         void onQRCodeRecognition(Result result);
     }
 }

@@ -63,6 +63,7 @@ public class DecodeThread extends Thread {
         if(data == null || data.length <= 0) return;
         Result rawResult = null;
         PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+        ByteArrayPool.getInstance().returnBuf(data);
         if (source != null) {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
             try {
@@ -75,8 +76,12 @@ public class DecodeThread extends Thread {
         }
 
         if (rawResult != null && mQRCodeView != null) {
-            mQRCodeView.getOnQRCodeListener().onQRCodeRecognition(rawResult);
+            Message message = Message.obtain();
+            message.what = mQRCodeView.EVENT_SUCCESS;
+            message.obj = rawResult;
+            mQRCodeView.getHandler().sendMessage(message);
+        }else{
+            Message.obtain(mQRCodeView.getHandler(), QRCodeView.EVENT_FAILED).sendToTarget();
         }
-        ByteArrayPool.getInstance().returnBuf(data);
     }
 }
