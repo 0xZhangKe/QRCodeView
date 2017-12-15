@@ -2,11 +2,13 @@ package com.zhangke.qrcodeview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private QRCodeView mQRCodeView;
 
@@ -22,5 +24,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume");
+        mQRCodeView.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mQRCodeView.stopPreview();
+        super.onPause();
     }
 }
