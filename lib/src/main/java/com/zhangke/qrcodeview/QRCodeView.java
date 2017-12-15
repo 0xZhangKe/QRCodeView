@@ -14,7 +14,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.google.zxing.Result;
-import com.zhangke.qrcodeview.lib.R;
 
 /**
  * Created by ZhangKe on 2017/12/11.

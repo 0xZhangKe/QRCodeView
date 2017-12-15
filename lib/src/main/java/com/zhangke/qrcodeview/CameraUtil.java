@@ -12,8 +12,6 @@ import android.view.WindowManager;
 import java.util.List;
 
 /**
- * Camera 相关工具
- *
  * Created by ZhangKe on 2017/11/8.
  */
 
@@ -21,9 +19,6 @@ public class CameraUtil {
 
     private static final String TAG = "CameraUtil";
 
-    /**
-     * 对摄像头初始化
-     */
     public static Camera initCamera(Activity activity, Camera camera, int cameraId){
         int mWidth = 720;
         int mHeight = 1280;
@@ -59,9 +54,6 @@ public class CameraUtil {
         return camera;
     }
 
-    /**
-     * 设置摄像头方向
-     */
     public static void setCameraDisplayOrientation(Context context, int cameraId, Camera camera){
         Camera.CameraInfo info =
                 new Camera.CameraInfo();
@@ -127,9 +119,6 @@ public class CameraUtil {
         parameters.setPictureSize(sizes.get(position).width, sizes.get(position).height);
     }
 
-    /**
-     * 释放mCamera
-     */
     public static void releaseCamera(Camera camera) {
         if (camera != null) {
             camera.setPreviewCallback(null);

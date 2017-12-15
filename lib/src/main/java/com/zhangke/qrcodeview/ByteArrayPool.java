@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 用来缓存与重用 byte[] 对象以防止大量 I/O 操作带来的内存消耗。
+ * cache byte[] object;
  * Created by ZhangKe on 2017/11/8.
  */
 
