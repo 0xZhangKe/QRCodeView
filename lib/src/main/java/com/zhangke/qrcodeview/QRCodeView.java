@@ -13,7 +13,16 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
+
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ZhangKe on 2017/12/11.
@@ -25,6 +34,8 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
     static final int EVENT_SUCCESS = 0x001;
     static final int EVENT_FAILED = 0x002;
 
+    private boolean showResultPoint = false;
+
     private Camera mCamera;
     private Camera.Parameters mCameraParameters;
     private SurfaceHolder mSurfaceHolder;
@@ -34,6 +45,8 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
 
     private DecodeThread mDecodeThread;
     private OnQRCodeRecognitionListener onQRCodeListener;
+
+    private Map<DecodeHintType, Object> decodeHints = new EnumMap<>(DecodeHintType.class);
 
     private MainHandler mHandler = new MainHandler();
     private PreviewCallback mPreviewCallback;
@@ -74,11 +87,14 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.QRCodeView, defStyleAttr, 0);
         mCameraID = a.getInt(R.styleable.QRCodeView_facing, Camera.CameraInfo.CAMERA_FACING_BACK);
+        showResultPoint = a.getBoolean(R.styleable.QRCodeView_showPoint, false);
         a.recycle();
         init();
     }
 
     private void init() {
+        decodeHints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, showResultPoint);
+
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
         mDecodeThread = new DecodeThread(this);

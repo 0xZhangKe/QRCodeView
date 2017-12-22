@@ -16,10 +16,6 @@
 
 package com.google.zxing;
 
-import com.google.zxing.datamatrix.DataMatrixWriter;
-import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
-import com.google.zxing.pdf417.encoder.Compaction;
-import com.google.zxing.pdf417.encoder.Dimensions;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 /**
