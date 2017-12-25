@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -28,13 +30,16 @@ import java.util.Set;
  * Created by ZhangKe on 2017/12/11.
  */
 
-public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
+public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
 
     private static final String TAG = "QRCodeView";
     static final int EVENT_SUCCESS = 0x001;
     static final int EVENT_FAILED = 0x002;
 
     private boolean showResultPoint = false;
+
+    private SurfaceView mSurfaceView;
+    private ViewfinderView mViewfinderView;
 
     private Camera mCamera;
     private Camera.Parameters mCameraParameters;
@@ -63,6 +68,9 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
                     if (mCamera != null) {
                         onQRCodeListener.onQRCodeRecognition((Result)msg.obj);
                         restartPreviewAndDecode();
+                    }
+                    if(showResultPoint){
+
                     }
                     break;
                 case EVENT_FAILED:
@@ -93,9 +101,17 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void init() {
+        mSurfaceView = new SurfaceView(getContext());
+        mSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        addView(mSurfaceView);
+
+        mViewfinderView = new ViewfinderView(getContext());
+        mViewfinderView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        addView(mViewfinderView);
+
         decodeHints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, showResultPoint);
 
-        mSurfaceHolder = getHolder();
+        mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
         mDecodeThread = new DecodeThread(this);
         mDecodeThread.start();
@@ -124,7 +140,7 @@ public class QRCodeView extends SurfaceView implements SurfaceHolder.Callback {
     private void openCamera() {
         try {
             mCamera = Camera.open(mCameraID);
-            mCamera.setPreviewDisplay(this.getHolder());
+            mCamera.setPreviewDisplay(mSurfaceHolder);
 
             mCameraParameters = mCamera.getParameters();
 
