@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.zhangke.qrcodeview.QRCodeView
-        android:id="@+id/qr_code_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/img_01"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/img_02"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
+
+</LinearLayout>
