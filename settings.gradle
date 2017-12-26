@@ -1,1 +1,1 @@
-include ':sample', ':lib', ':zxingdemo'
+include ':sample', ':lib'
