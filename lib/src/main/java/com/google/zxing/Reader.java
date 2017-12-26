@@ -16,9 +16,9 @@
 
 package com.google.zxing;
 
-import java.util.Map;
-
 import com.google.zxing.qrcode.QRCodeReader;
+
+import java.util.Map;
 
 /**
  * Implementations of this interface can decode an image of a barcode in some format into

@@ -16,10 +16,10 @@
 
 package com.google.zxing.common;
 
+import com.google.zxing.FormatException;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.zxing.FormatException;
 
 /**
  * Encapsulates a Character Set ECI, according to "Extended Channel Interpretations" 5.3.1.1

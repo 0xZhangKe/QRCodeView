@@ -16,9 +16,10 @@
 
 package com.google.zxing;
 
-import java.util.Map;
-
 import com.google.zxing.qrcode.QRCodeReader;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * MultiFormatReader is a convenience class and the main entry point into the library for most uses.
@@ -30,8 +31,12 @@ import com.google.zxing.qrcode.QRCodeReader;
  */
 public final class MultiFormatReader implements Reader {
 
-    private Map<DecodeHintType, ?> hints;
+    private Map<DecodeHintType, String> hints = new HashMap<>();
     private Reader readers;
+
+    public MultiFormatReader() {
+        hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
+    }
 
     /**
      * This version of decode honors the intent of Reader.decode(BinaryBitmap) in that it

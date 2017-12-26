@@ -16,8 +16,6 @@
 
 package com.google.zxing.qrcode;
 
-import java.util.Map;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.Writer;
@@ -27,6 +25,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
+
+import java.util.Map;
 
 /**
  * This object renders a QR Code as a BitMatrix 2D array of greyscale values.
