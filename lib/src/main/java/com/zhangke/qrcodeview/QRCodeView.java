@@ -1,9 +1,8 @@
 package com.zhangke.qrcodeview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.ImageFormat;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Handler;
@@ -15,16 +14,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
-
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by ZhangKe on 2017/12/11.
@@ -36,7 +26,9 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     static final int EVENT_SUCCESS = 0x001;
     static final int EVENT_FAILED = 0x002;
 
+    private boolean showFrame = true;
     private boolean showResultPoint = false;
+    private int frameColor = Color.WHITE;
 
     private SurfaceView mSurfaceView;
     private ViewfinderView mViewfinderView;
@@ -51,8 +43,6 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     private DecodeThread mDecodeThread;
     private OnQRCodeRecognitionListener onQRCodeListener;
 
-    private Map<DecodeHintType, Object> decodeHints = new EnumMap<>(DecodeHintType.class);
-
     private MainHandler mHandler = new MainHandler();
     private PreviewCallback mPreviewCallback;
 
@@ -65,17 +55,21 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
             super.handleMessage(msg);
             switch (msg.what) {
                 case EVENT_SUCCESS:
+                    Result result = (Result) msg.obj;
                     if (mCamera != null) {
-                        onQRCodeListener.onQRCodeRecognition((Result)msg.obj);
+                        onQRCodeListener.onQRCodeRecognition(result);
                         restartPreviewAndDecode();
                     }
-                    if(showResultPoint){
-
+                    if (showResultPoint && mViewfinderView != null) {
+                        mViewfinderView.addPoint(result.getResultPoints(), mWidth, mHeight);
                     }
                     break;
                 case EVENT_FAILED:
                     if (mCamera != null) {
                         restartPreviewAndDecode();
+                    }
+                    if (showResultPoint && mViewfinderView != null) {
+                        mViewfinderView.addPoint(null, mWidth, mHeight);
                     }
                     break;
             }
@@ -94,8 +88,10 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     public QRCodeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.QRCodeView, defStyleAttr, 0);
+        showFrame = a.getBoolean(R.styleable.QRCodeView_showFrame, true);
         mCameraID = a.getInt(R.styleable.QRCodeView_facing, Camera.CameraInfo.CAMERA_FACING_BACK);
         showResultPoint = a.getBoolean(R.styleable.QRCodeView_showPoint, false);
+        frameColor = a.getColor(R.styleable.QRCodeView_frameColor, Color.WHITE);
         a.recycle();
         init();
     }
@@ -105,11 +101,13 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         mSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         addView(mSurfaceView);
 
-        mViewfinderView = new ViewfinderView(getContext());
-        mViewfinderView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        addView(mViewfinderView);
-
-        decodeHints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, showResultPoint);
+        if (showFrame || showResultPoint) {
+            mViewfinderView = new ViewfinderView(getContext());
+            mViewfinderView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            addView(mViewfinderView);
+            mViewfinderView.setFrameColor(frameColor);
+            mViewfinderView.setShowFrame(showFrame);
+        }
 
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
@@ -168,26 +166,26 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         }
     }
 
-    public void startPreview(){
-        if(!previewing && surfaceCreated) {
+    public void startPreview() {
+        if (!previewing && surfaceCreated) {
             mCamera.startPreview();
             restartPreviewAndDecode();
             previewing = true;
         }
     }
 
-    public void stopPreview(){
-        if(previewing) {
+    public void stopPreview() {
+        if (previewing) {
             mCamera.stopPreview();
             previewing = false;
         }
     }
 
-    public boolean isPreview(){
+    public boolean isPreview() {
         return previewing;
     }
 
-    public Camera getCamera(){
+    public Camera getCamera() {
         return mCamera;
     }
 
