@@ -10,32 +10,32 @@ import android.widget.Toast;
 
 import com.google.zxing.WriterException;
 import com.zhangke.qrcodeview.QRCodeUtil;
+import com.zhangke.qrcodeview.QRCodeView;
 import com.zhangke.qrcodeview.smaple.R;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    private ImageView img01;
-    private ImageView img02;
+    private QRCodeView qrCodeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.qr_code);
-//        img01.setImageBitmap(bitmap);
-        Toast.makeText(this, QRCodeUtil.decodeQRCode(bitmap), Toast.LENGTH_SHORT).show();
+        qrCodeView = (QRCodeView) findViewById(R.id.qr_code_view);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        qrCodeView.startPreview();
         Log.e(TAG, "onResume");
     }
 
     @Override
     protected void onPause() {
+        qrCodeView.stopPreview();
         super.onPause();
     }
 }
