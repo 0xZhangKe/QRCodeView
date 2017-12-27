@@ -5,9 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Scroller;
 
 import com.google.zxing.ResultPoint;
 
@@ -18,8 +20,11 @@ public final class ViewfinderView extends View {
     private static final String TAG = "ViewfinderView";
 
     private int mMaskColor = 0x80000000;
+    private int mPointColor = 0xffff0000;
     private int mFrameColor = 0xffffffff;
+    private int sliderColor = 0xffffffff;
     private boolean showFrame = true;
+    private boolean showSlider = true;
 
     private Paint mPaint;
 
@@ -35,6 +40,33 @@ public final class ViewfinderView extends View {
     private float scaleY = 0.0F;
 
     private ResultPoint[] drawPoint;
+
+    private Scroller mScroller;
+    private int sliderY;
+    private boolean stop = true;
+
+    private Handler mHandler = new Handler();
+
+    private Runnable sliderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            while (!stop) {
+                if (mFrame != null) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mScroller.startScroll(0, mFrame.top, 0, mFrame.height(), 5000);
+                        }
+                    });
+                }
+//                try {
+//                    Thread.sleep(2100);
+//                } catch (InterruptedException e) {
+//                    Log.e(TAG, "run: ", e);
+//                }
+            }
+        }
+    };
 
     public ViewfinderView(Context context) {
         super(context);
@@ -54,6 +86,12 @@ public final class ViewfinderView extends View {
     private void init() {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
+        mScroller = new Scroller(getContext());
+        stop = false;
+
+        if (showSlider) {
+            new Thread(sliderRunnable).start();
+        }
     }
 
     @Override
@@ -71,24 +109,23 @@ public final class ViewfinderView extends View {
             scaleY = previewWidth / (float) mHeight;
         }
 
-        if (showFrame) {
-
-            if (mFrame == null) {
-                mFrame = new Rect();
-                int viewWidth = getWidth();
-                int viewHeight = getHeight();
-                if (viewWidth > viewHeight) {
-                    int tmp = viewWidth;
-                    viewWidth = viewHeight;
-                    viewHeight = tmp;
-                }
-                int frameWidth = (int) ((float) viewWidth * 2.0F / 3.0F);
-                mFrame.top = (viewHeight - frameWidth) / 2;
-                mFrame.bottom = mFrame.top + frameWidth;
-                mFrame.left = (viewWidth - frameWidth) / 2;
-                mFrame.right = mFrame.left + frameWidth;
+        if (mFrame == null) {
+            mFrame = new Rect();
+            int viewWidth = getWidth();
+            int viewHeight = getHeight();
+            if (viewWidth > viewHeight) {
+                int tmp = viewWidth;
+                viewWidth = viewHeight;
+                viewHeight = tmp;
             }
+            int frameWidth = (int) ((float) viewWidth * 2.0F / 3.0F);
+            mFrame.top = (viewHeight - frameWidth) / 2;
+            mFrame.bottom = mFrame.top + frameWidth;
+            mFrame.left = (viewWidth - frameWidth) / 2;
+            mFrame.right = mFrame.left + frameWidth;
+        }
 
+        if (showFrame) {
             //绘制灰色半透明背景
             mPaint.setColor(mMaskColor);
             mPaint.setStyle(Paint.Style.FILL);
@@ -118,12 +155,26 @@ public final class ViewfinderView extends View {
             canvas.drawRect(mFrame, mPaint);
         }
 
+        if (showSlider && mFrame != null) {
+            mPaint.setColor(sliderColor);
+            canvas.drawLine(mFrame.left, sliderY, mFrame.right, sliderY, mPaint);
+        }
+
         if (drawPoint != null && drawPoint.length > 0) {
+            mPaint.setColor(mPointColor);
             for (ResultPoint point : drawPoint) {
                 float x = (int) ((previewHeight - point.getY()) / scaleX);
                 float y = (int) (point.getX() / scaleY);
                 canvas.drawPoint(x, y, mPaint);
             }
+        }
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mScroller.computeScrollOffset()) {
+            sliderY = mScroller.getCurrY();
+            invalidate();
         }
     }
 
@@ -147,5 +198,11 @@ public final class ViewfinderView extends View {
     public static int dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        stop = true;
+        super.onDetachedFromWindow();
     }
 }
