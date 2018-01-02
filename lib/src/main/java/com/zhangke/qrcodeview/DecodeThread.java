@@ -74,9 +74,9 @@ public class DecodeThread extends Thread {
             Message message = Message.obtain();
             message.what = mQRCodeView.EVENT_SUCCESS;
             message.obj = rawResult;
-            mQRCodeView.getHandler().sendMessage(message);
+            mQRCodeView.getViewHandler().sendMessage(message);
         }else{
-            Message.obtain(mQRCodeView.getHandler(), QRCodeView.EVENT_FAILED).sendToTarget();
+            Message.obtain(mQRCodeView.getViewHandler(), QRCodeView.EVENT_FAILED).sendToTarget();
         }
     }
 }

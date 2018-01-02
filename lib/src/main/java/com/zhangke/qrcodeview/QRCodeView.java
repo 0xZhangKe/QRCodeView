@@ -205,7 +205,7 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         mCamera.setOneShotPreviewCallback(mPreviewCallback);
     }
 
-    public Handler getHandler() {
+    Handler getViewHandler() {
         return mHandler;
     }
 
