@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         qrCodeView.startPreview();
-        Log.e(TAG, "onResume");
     }
 
     @Override
