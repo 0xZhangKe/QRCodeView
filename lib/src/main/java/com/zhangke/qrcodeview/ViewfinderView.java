@@ -158,6 +158,7 @@ public final class ViewfinderView extends View {
 
         if (showSlider && mFrame != null && sliderY != 0) {
             mPaint.setColor(sliderColor);
+            mPaint.setStrokeWidth(dip2px(getContext(), 3));
             canvas.drawLine(mFrame.left, sliderY, mFrame.right, sliderY, mPaint);
         }
 
