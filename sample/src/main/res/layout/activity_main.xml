@@ -9,10 +9,12 @@
         android:id="@+id/qr_code_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:facing="back"
         app:showSlider="true"
         app:sliderColor="@android:color/holo_green_dark"
         app:showPoint="true"
         app:pointColor="@color/colorAccent"
-        app:frameColor="@android:color/white"/>
+        app:frameColor="@android:color/white"
+        app:showFrame="true"/>
 
 </LinearLayout>
