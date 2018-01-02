@@ -2,11 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.zhangke.qrcodeview.QRCodeView
         android:id="@+id/qr_code_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:showSlider="true"
+        app:sliderColor="@android:color/holo_green_dark"
+        app:showPoint="true"
+        app:pointColor="@color/colorAccent"
+        app:frameColor="@android:color/white"/>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.zhangke.qrcodeview.QRCodeUtil;
 import com.zhangke.qrcodeview.QRCodeView;
@@ -24,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         qrCodeView = (QRCodeView) findViewById(R.id.qr_code_view);
+        qrCodeView.setOnQRCodeListener(new QRCodeView.OnQRCodeRecognitionListener() {
+            @Override
+            public void onQRCodeRecognition(Result result) {
+                Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
