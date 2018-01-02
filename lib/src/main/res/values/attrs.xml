@@ -6,7 +6,10 @@
             <enum name="front" value="1" />
         </attr>
         <attr name="showFrame" format="boolean"/>
-        <attr name="showPoint" format="boolean"/>
         <attr name="frameColor" format="color"/>
+        <attr name="showPoint" format="boolean"/>
+        <attr name="pointColor" format="boolean"/>
+        <attr name="sliderColor" format="color"/>
+        <attr name="showSlider" format="boolean"/>
     </declare-styleable>
 </resources>

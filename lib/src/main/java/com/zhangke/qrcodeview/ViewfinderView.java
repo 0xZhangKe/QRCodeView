@@ -42,7 +42,7 @@ public final class ViewfinderView extends View {
     private ResultPoint[] drawPoint;
 
     private Scroller mScroller;
-    private int sliderY;
+    private int sliderY = 0;
     private boolean stop = true;
 
     private Handler mHandler = new Handler();
@@ -55,15 +55,16 @@ public final class ViewfinderView extends View {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mScroller.startScroll(0, mFrame.top, 0, mFrame.height(), 5000);
+                            mScroller.startScroll(0, mFrame.top, 0, mFrame.height(), 2000);
+                            invalidate();
                         }
                     });
                 }
-//                try {
-//                    Thread.sleep(2100);
-//                } catch (InterruptedException e) {
-//                    Log.e(TAG, "run: ", e);
-//                }
+                try {
+                    Thread.sleep(2100);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "run: ", e);
+                }
             }
         }
     };
@@ -155,7 +156,7 @@ public final class ViewfinderView extends View {
             canvas.drawRect(mFrame, mPaint);
         }
 
-        if (showSlider && mFrame != null) {
+        if (showSlider && mFrame != null && sliderY != 0) {
             mPaint.setColor(sliderColor);
             canvas.drawLine(mFrame.left, sliderY, mFrame.right, sliderY, mPaint);
         }
@@ -174,6 +175,7 @@ public final class ViewfinderView extends View {
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             sliderY = mScroller.getCurrY();
+            Log.e(TAG, "computeScroll: " + sliderY);
             invalidate();
         }
     }
@@ -193,6 +195,18 @@ public final class ViewfinderView extends View {
     public void setShowFrame(boolean showFrame) {
         this.showFrame = showFrame;
         invalidate();
+    }
+
+    public void setPointColor(int mPointColor) {
+        this.mPointColor = mPointColor;
+    }
+
+    public void setSliderColor(int sliderColor) {
+        this.sliderColor = sliderColor;
+    }
+
+    public void setShowSlider(boolean showSlider) {
+        this.showSlider = showSlider;
     }
 
     public static int dip2px(Context context, float dipValue) {

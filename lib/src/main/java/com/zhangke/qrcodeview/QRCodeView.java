@@ -26,9 +26,14 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     static final int EVENT_SUCCESS = 0x001;
     static final int EVENT_FAILED = 0x002;
 
+    //attrs
     private boolean showFrame = true;
-    private boolean showResultPoint = false;
     private int frameColor = Color.WHITE;
+    private boolean showResultPoint = false;
+    private int pointColor = Color.RED;
+    private int sliderColor = Color.GREEN;
+    private boolean showSlider = true;
+
 
     private SurfaceView mSurfaceView;
     private ViewfinderView mViewfinderView;
@@ -56,7 +61,7 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
             switch (msg.what) {
                 case EVENT_SUCCESS:
                     Result result = (Result) msg.obj;
-                    if (mCamera != null) {
+                    if (mCamera != null && onQRCodeListener != null) {
                         onQRCodeListener.onQRCodeRecognition(result);
                         restartPreviewAndDecode();
                     }
@@ -65,7 +70,7 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
                     }
                     break;
                 case EVENT_FAILED:
-                    if (mCamera != null) {
+                    if (mCamera != null && onQRCodeListener != null) {
                         restartPreviewAndDecode();
                     }
                     if (showResultPoint && mViewfinderView != null) {
@@ -88,10 +93,13 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     public QRCodeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.QRCodeView, defStyleAttr, 0);
-        showFrame = a.getBoolean(R.styleable.QRCodeView_showFrame, true);
         mCameraID = a.getInt(R.styleable.QRCodeView_facing, Camera.CameraInfo.CAMERA_FACING_BACK);
-        showResultPoint = a.getBoolean(R.styleable.QRCodeView_showPoint, false);
-        frameColor = a.getColor(R.styleable.QRCodeView_frameColor, Color.WHITE);
+        showFrame = a.getBoolean(R.styleable.QRCodeView_showFrame, showFrame);
+        frameColor = a.getColor(R.styleable.QRCodeView_frameColor, frameColor);
+        showResultPoint = a.getBoolean(R.styleable.QRCodeView_showPoint, showResultPoint);
+        pointColor = a.getColor(R.styleable.QRCodeView_pointColor, pointColor);
+        showSlider = a.getBoolean(R.styleable.QRCodeView_showSlider, showSlider);
+        sliderColor = a.getColor(R.styleable.QRCodeView_sliderColor, sliderColor);
         a.recycle();
         init();
     }
@@ -107,6 +115,9 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
             addView(mViewfinderView);
             mViewfinderView.setFrameColor(frameColor);
             mViewfinderView.setShowFrame(showFrame);
+            mViewfinderView.setPointColor(pointColor);
+            mViewfinderView.setShowSlider(showSlider);
+            mViewfinderView.setSliderColor(sliderColor);
         }
 
         mSurfaceHolder = mSurfaceView.getHolder();
