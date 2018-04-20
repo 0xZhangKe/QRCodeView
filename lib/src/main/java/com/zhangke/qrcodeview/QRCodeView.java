@@ -185,7 +185,9 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         if (!previewing && surfaceCreated) {
             previewing = true;
             mCamera.startPreview();
-            mViewfinderView.addPoint(null, mWidth, mHeight);
+            if(showFrame && showResultPoint && mViewfinderView != null) {
+                mViewfinderView.addPoint(null, mWidth, mHeight);
+            }
             restartPreviewAndDecode();
         }
     }
@@ -194,7 +196,9 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         if (previewing) {
             previewing = false;
             mCamera.stopPreview();
-            mViewfinderView.addPoint(null, mWidth, mHeight);
+            if(showFrame && showResultPoint && mViewfinderView != null) {
+                mViewfinderView.addPoint(null, mWidth, mHeight);
+            }
         }
     }
 
