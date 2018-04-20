@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.zxing.Result;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by ZhangKe on 2017/12/11.
@@ -179,16 +183,18 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
 
     public void startPreview() {
         if (!previewing && surfaceCreated) {
-            mCamera.startPreview();
-            restartPreviewAndDecode();
             previewing = true;
+            mCamera.startPreview();
+            mViewfinderView.addPoint(null, mWidth, mHeight);
+            restartPreviewAndDecode();
         }
     }
 
     public void stopPreview() {
         if (previewing) {
-            mCamera.stopPreview();
             previewing = false;
+            mCamera.stopPreview();
+            mViewfinderView.addPoint(null, mWidth, mHeight);
         }
     }
 

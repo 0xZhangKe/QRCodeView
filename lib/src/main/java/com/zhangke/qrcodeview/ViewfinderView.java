@@ -176,7 +176,6 @@ public final class ViewfinderView extends View {
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             sliderY = mScroller.getCurrY();
-            Log.e(TAG, "computeScroll: " + sliderY);
             invalidate();
         }
     }
@@ -186,6 +185,10 @@ public final class ViewfinderView extends View {
         this.previewHeight = previewHeight;
         drawPoint = points;
         invalidate();
+    }
+
+    public void clearPoint(){
+
     }
 
     public void setFrameColor(int frameColor) {
