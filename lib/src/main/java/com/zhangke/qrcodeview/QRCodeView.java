@@ -185,10 +185,24 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         if (!previewing && surfaceCreated) {
             previewing = true;
             mCamera.startPreview();
-            if(showFrame && showResultPoint && mViewfinderView != null) {
+            if (showFrame && showResultPoint && mViewfinderView != null) {
                 mViewfinderView.addPoint(null, mWidth, mHeight);
             }
-            restartPreviewAndDecode();
+            if (!mDecodeThread.isAlive()) {
+                mDecodeThread = new DecodeThread(this);
+                mDecodeThread.start();
+            }
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            restartPreviewAndDecode();
+                        }
+                    });
+                }
+            }, 300);
         }
     }
 
@@ -196,7 +210,7 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
         if (previewing) {
             previewing = false;
             mCamera.stopPreview();
-            if(showFrame && showResultPoint && mViewfinderView != null) {
+            if (showFrame && showResultPoint && mViewfinderView != null) {
                 mViewfinderView.addPoint(null, mWidth, mHeight);
             }
         }
@@ -211,8 +225,12 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
     }
 
     private void restartPreviewAndDecode() {
-        mPreviewCallback.setHandler(mDecodeThread.getHandler(), DecodeThread.DECODE_EVENT);
-        mCamera.setOneShotPreviewCallback(mPreviewCallback);
+        try {
+            mPreviewCallback.setHandler(mDecodeThread.getHandler(), DecodeThread.DECODE_EVENT);
+            mCamera.setOneShotPreviewCallback(mPreviewCallback);
+        } catch (Exception e) {
+            Log.e(TAG, "restartPreviewAndDecode: ", e);
+        }
     }
 
     Handler getViewHandler() {
