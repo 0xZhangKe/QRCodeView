@@ -1,5 +1,6 @@
 package com.zhangke.qrcodeview.sample;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -22,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         qrCodeView.setOnQRCodeListener(new QRCodeView.OnQRCodeRecognitionListener() {
             @Override
             public void onQRCodeRecognition(Result result) {
-                Toast.makeText(MainActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ShowQRCodeContentActivity.class);
+                intent.putExtra("qr_content", result.getText());
+                startActivity(intent);
             }
         });
     }
