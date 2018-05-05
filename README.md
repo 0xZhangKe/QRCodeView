@@ -6,9 +6,10 @@
 **注意：此项目只支持二维码，不支持其他格式的条码！**
 ## 效果图
 <img src="http://img.blog.csdn.net/20180102153219279?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzg3Mjg1Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="预览图" width=400 height=600  align=center/>
+
 ## 使用方式
 使用起来很简单，先看一下布局文件：
-```
+```xml
 <com.zhangke.qrcodeview.QRCodeView
     android:id="@+id/qr_code_view"
     android:layout_width="match_parent"
@@ -20,7 +21,7 @@
     app:frameColor="@android:color/white"/>
 ```
 再看下 java 代码：
-```
+```java
 package com.zhangke.qrcodeview.sample;
 
 import android.support.v7.app.AppCompatActivity;
@@ -64,12 +65,15 @@ public class MainActivity extends AppCompatActivity {
 }
 
 ```
+
 是不是很简单？就是根据声明周期初始化一下，设置个回调就 OK 了，对了别忘记添加权限：
-```
+
+```xml
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 ```
+
 ## 将 QRCodeView 添加到自己的项目中
 首先打开 QRCodeView 项目：
 https://github.com/0xZhangKe/QRCodeView
@@ -77,12 +81,17 @@ https://github.com/0xZhangKe/QRCodeView
 其中有两个 model：lib 和 sample ，sample 是使用的案例，不会使用的可以参照其中的代码。lib 即核心代码，可以将整个项目 clone 到本地，然后将 lib 添加到自己的项目中，然后设置好依赖就行了。
 或者也可以直接将 lib 下面的代码复制到你自己的项目中。
 ## 类文档
+
 ### QRCodeViewView
+
 **包名：**
-```
+
+```java
 com.zhangke.qrcodeview
 ```
+
 **描述：**
+
 二维码预览 View。
 
 
