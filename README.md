@@ -96,6 +96,7 @@ com.zhangke.qrcodeview
 
 
 **XML attributes：**
+
 | 参数名 | 介绍 |
 | ------| ------ |
 | app:facing | 前置或后置摄像头 |
@@ -133,6 +134,7 @@ com.zhangke.qrcodeview.QRCodeViewView
 ```
 **描述：**
 二维码识别监听器
+
 name|  describe
 ------| ------
 void onQRCodeRecognition(Result result) | 识别到二维码时会回调此方法
@@ -146,6 +148,7 @@ com.zhangke.qrcodeview
 ```
 **描述：**
 二维码相关工具类。
+
 name|  describe
 ------| ------
 static Bitmap createQRCode(String text) throws WriterException | 根据文本创建二维码图片
