@@ -4,7 +4,7 @@
 ## 前言
 [QRCodeView](https://github.com/0xZhangKe/QRCodeView) 基于 Google  的 [zxing](https://github.com/zxing/zxing) 进行二次开发，简化二维码的相关操作、优化识别速度。由于整个 zxing 框架中不仅包含了二维码识别相关的代码，还包括其他格式如条形码等等的代码，体量较大，实际开发中一般只需要使用二维码，故本项目中删除了不必要的代码。本项目不仅提供了使用摄像头预览实时识别二维码，还有如生成一张二维码图片，生成一张带有 logo 的二维码图片等等。
 **注意：此项目只支持二维码，不支持其他格式的条码！**
-##效果图
+## 效果图
 <img src="http://img.blog.csdn.net/20180102153219279?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzg3Mjg1Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="预览图"Swidth=400 height=600  align=center/>
 ## 使用方式
 使用起来很简单，先看一下布局文件：
