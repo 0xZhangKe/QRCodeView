@@ -6,6 +6,7 @@
 **注意：此项目只支持二维码，不支持其他格式的条码！**
 ## 效果图
 <img src="http://img.blog.csdn.net/20180102153219279?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzg3Mjg1Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="预览图" width=400 height=600  align=center/>
+
 ## 集成方式
 在 app/build.gradle 中添加依赖：
 ```
