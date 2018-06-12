@@ -251,12 +251,10 @@ public final class CameraConfigurationUtils {
         }
     }
 
-    public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Context context){
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = manager.getDefaultDisplay();
-
+    public static Point findBestPreviewSizeValue(Camera.Parameters parameters, int width, int height){
         Point theScreenResolution = new Point();
-        display.getSize(theScreenResolution);
+        theScreenResolution.x = width;
+        theScreenResolution.y = height;
         return findBestPreviewSizeValue(parameters, theScreenResolution);
     }
 

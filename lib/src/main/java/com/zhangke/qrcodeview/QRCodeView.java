@@ -157,7 +157,7 @@ public class QRCodeView extends FrameLayout implements SurfaceHolder.Callback {
 
             mCameraParameters = mCamera.getParameters();
 
-            Point bestPreviewSize = CameraConfigurationUtils.findBestPreviewSizeValue(mCameraParameters, getContext());
+            Point bestPreviewSize = CameraConfigurationUtils.findBestPreviewSizeValue(mCameraParameters, getWidth(), getHeight());
             mCameraParameters.setPreviewSize(bestPreviewSize.x, bestPreviewSize.y);
             CameraUtil.setCameraPictureSize(mCameraParameters, mHeight);
             CameraUtil.setCameraDisplayOrientation(getContext(), mCameraID, mCamera);
