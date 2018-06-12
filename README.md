@@ -10,7 +10,7 @@
 ## 集成方式
 在 app/build.gradle 中添加依赖：
 ```
-implementation 'com.github.0xZhangKe:QRCodeView:1.1'
+implementation 'com.github.0xZhangKe:QRCodeView:1.2'
 ```
 如果依赖失败还要在根目录的 builde.gradle 中添加仓库：
 ```
