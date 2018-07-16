@@ -251,12 +251,6 @@ public final class CameraConfigurationUtils {
         }
     }
 
-    public static Point findBestPreviewSizeValue(Camera.Parameters parameters, int width, int height){
-        Point theScreenResolution = new Point();
-        theScreenResolution.x = width;
-        theScreenResolution.y = height;
-        return findBestPreviewSizeValue(parameters, theScreenResolution);
-    }
 
     public static Point findBestPreviewSizeValue(Camera.Parameters parameters, Point screenResolution) {
         List<Camera.Size> rawSupportedSizes = parameters.getSupportedPreviewSizes();
@@ -290,7 +284,7 @@ public final class CameraConfigurationUtils {
                 continue;
             }
 
-            boolean isCandidatePortrait = realWidth < realHeight;
+            boolean isCandidatePortrait = realWidth > realHeight;
             int maybeFlippedWidth = isCandidatePortrait ? realHeight : realWidth;
             int maybeFlippedHeight = isCandidatePortrait ? realWidth : realHeight;
             double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
@@ -328,6 +322,73 @@ public final class CameraConfigurationUtils {
         }
         Point defaultSize = new Point(defaultPreview.width, defaultPreview.height);
         Log.i(TAG, "No suitable preview sizes, using default: " + defaultSize);
+        return defaultSize;
+    }
+
+    public static Point findBestPictureSizeValue(Camera.Parameters parameters, Point screenResolution) {
+        List<Camera.Size> rawSupportedSizes = parameters.getSupportedPictureSizes();
+        if (rawSupportedSizes == null) {
+            Log.w(TAG, "Device returned no supported picture sizes; using default");
+            Camera.Size defaultSize = parameters.getPreviewSize();
+            if (defaultSize == null) {
+                throw new IllegalStateException("Parameters contained no picture size!");
+            }
+            return new Point(defaultSize.width, defaultSize.height);
+        }
+
+        if (Log.isLoggable(TAG, Log.INFO)) {
+            StringBuilder previewSizesString = new StringBuilder();
+            for (Camera.Size size : rawSupportedSizes) {
+                previewSizesString.append(size.width).append('x').append(size.height).append(' ');
+            }
+            Log.i(TAG, "Supported picture sizes: " + previewSizesString);
+        }
+
+        double screenAspectRatio = screenResolution.x / (double) screenResolution.y;
+
+        int maxResolution = 0;
+        Camera.Size maxResPreviewSize = null;
+        for (Camera.Size size : rawSupportedSizes) {
+            int realWidth = size.width;
+            int realHeight = size.height;
+            int resolution = realWidth * realHeight;
+            if (resolution < MIN_PREVIEW_PIXELS) {
+                continue;
+            }
+
+            boolean isCandidatePortrait = realWidth > realHeight;
+            int maybeFlippedWidth = isCandidatePortrait ? realHeight : realWidth;
+            int maybeFlippedHeight = isCandidatePortrait ? realWidth : realHeight;
+            double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
+            double distortion = Math.abs(aspectRatio - screenAspectRatio);
+            if (distortion > MAX_ASPECT_DISTORTION) {
+                continue;
+            }
+
+            if (maybeFlippedWidth == screenResolution.x && maybeFlippedHeight == screenResolution.y) {
+                Point exactPoint = new Point(realWidth, realHeight);
+                Log.i(TAG, "Found picture size exactly matching screen size: " + exactPoint);
+                return exactPoint;
+            }
+
+            if (resolution > maxResolution) {
+                maxResolution = resolution;
+                maxResPreviewSize = size;
+            }
+        }
+
+        if (maxResPreviewSize != null) {
+            Point largestSize = new Point(maxResPreviewSize.width, maxResPreviewSize.height);
+            Log.i(TAG, "Using largest suitable picture size: " + largestSize);
+            return largestSize;
+        }
+
+        Camera.Size defaultPreview = parameters.getPictureSize();
+        if (defaultPreview == null) {
+            throw new IllegalStateException("Parameters contained no picture size!");
+        }
+        Point defaultSize = new Point(defaultPreview.width, defaultPreview.height);
+        Log.i(TAG, "No suitable picture sizes, using default: " + defaultSize);
         return defaultSize;
     }
 
