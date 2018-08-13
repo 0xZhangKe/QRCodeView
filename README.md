@@ -10,7 +10,7 @@
 ## 集成方式
 在 app/build.gradle 中添加依赖：
 ```
-implementation 'com.github.0xZhangKe:QRCodeView:1.2'
+implementation 'com.github.0xZhangKe:QRCodeView:1.3'
 ```
 如果依赖失败还要在根目录的 builde.gradle 中添加仓库：
 ```
@@ -163,3 +163,10 @@ name|  describe
 static Bitmap createQRCode(String text) throws WriterException | 根据文本创建二维码图片
 static Bitmap createQRCode(String text, Bitmap logo) | 根据文本及 logo 创建一个带有 logo 的二维码图片
 static String decodeQRCode(Bitmap bitmap) | 识别一张二维码图片，返回其中的文本
+
+<p>
+<p>
+欢迎加我微信交流
+
+
+![微信二维码](http://otp9vas7i.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180728142713.jpg)
