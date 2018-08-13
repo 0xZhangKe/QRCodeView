@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.zhangke.qrcodeview.sample.MainActivity">
+        <activity android:name="com.zhangke.qrcodeview.sample.PermissionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.zhangke.qrcodeview.sample.ShowQRCodeContentActivity"/>
+        <activity android:name="com.zhangke.qrcodeview.sample.MainActivity"/>
     </application>
 
 </manifest>
