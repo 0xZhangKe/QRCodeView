@@ -169,4 +169,4 @@ static String decodeQRCode(Bitmap bitmap) | 识别一张二维码图片，返回
 欢迎加我微信交流
 
 
-![微信二维码](http://otp9vas7i.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180728142713.jpg)
+![微信二维码](screenshots/qr.png)
