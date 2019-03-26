@@ -166,7 +166,13 @@ static String decodeQRCode(Bitmap bitmap) | 识别一张二维码图片，返回
 
 <p>
 <p>
-欢迎加我微信交流
+    
+
+如果觉得还不错的话，欢迎关注我的个人公众号，我会不定期发一些干货文章~
+
+![公众号](screenshots/qrcode_for_subscription.jpg)
 
 
-![微信二维码](screenshots/qr.png)
+也可以加我微信：
+
+![微信二维码](screenshots/qrcode_for_account.jpg)
